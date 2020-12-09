@@ -1,0 +1,63 @@
+﻿@{
+    //HEAD 
+    ViewData["Title"] = "Timetable";
+}
+
+@*Main page with timetable*@
+
+  <div>
+    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+      Room: @Rooms.GetCurrentRoom()
+
+    </button>
+    <div class="dropdown-menu">
+      @{int i = 0;}     
+      @using (Html.BeginForm("Select", "Rooms")){
+        @foreach(string rooms in Rooms.GetRoomsList())
+          {
+            <button class="list-group-item" type="submit" value =@i name ="RoomSelected">@rooms</button>
+            i++;
+          }  
+        }                        
+    </div>
+      <a asp-area="" asp-controller="Home" asp-action="LoadFromFile" type="button" class="btn btn-warning">Load</a>
+      <a asp-area="" asp-controller="Home" asp-action="SaveToFile" type="button" class="btn btn-warning">Save</a>
+  </div>
+<br/> 
+
+@{
+  List<string> hours = new List<string>(){"8:00 - 8:45", "8:55 - 9:40", "9:50 - 10:35", "10:55 - 11:40", "11:50 - 12:35", "12:45 - 13:30",
+    "13:40 - 14:25", "14:35 - 15:20", "15:30 - 16:15"};
+}
+
+<div class="container">         
+  <table class="table table-dark table-hover">
+    <thead>
+      <tr>
+        <th>Time</th>
+        <th>Mon</th>
+        <th>Tue</th>
+        <th>Wed</th>
+        <th>Thu</th>
+        <th>Fri</th>
+      </tr>
+    </thead>
+    <tbody>
+      @{for(int k=0; k<9; k++){
+        <tr>
+        <td><b>@hours[k]</b></td>
+          @{for(int j=0; j<5; j++){
+              int val = 5*k+j;
+              @using (Html.BeginForm("EditTimetableEntry", "Rooms")){
+              <td><button type="submit" value=@val class="btn btn-secondary" name ="TimetableEntry">@TableEntries.GetTableData(val)</button></td>
+              }
+            }
+          }
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+</div>
+
+

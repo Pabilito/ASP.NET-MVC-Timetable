@@ -1,0 +1,29 @@
+{
+  "rooms" :[
+  "101",
+  "102"
+],
+  "groups" :[
+  "1a",
+  "1b",
+  "1c",
+  "1e"
+],
+  "classes":[
+  "English",
+  "Arts",
+  "Maths"
+],
+  "teachers":[
+  "Smith",
+  "Johnson",
+  "Kowalski"
+],
+  "activities":[
+   {"room":"101", "group":"1a", "class":"English", "slot":0, "teacher":"Johnson"},
+   {"room":"101", "group":"1e", "class":"Maths", "slot":1, "teacher":"Johnson"},
+   {"room":"101", "group":"1c", "class":"English", "slot":5, "teacher":"Johnson"},
+   {"room":"101", "group":"1b", "class":"Arts", "slot":7, "teacher":"Smith"},
+   {"room":"101", "group":"1e", "class":"English", "slot":20, "teacher":"Kowalski"}
+]
+}

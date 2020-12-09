@@ -1,0 +1,94 @@
+@{
+    ViewData["Title"] = "Edit data";
+}
+
+@*On this page user changes lists of teahcers, classes etc.*@
+
+@using (Html.BeginForm("SelectEditType", "Edit"))
+{
+    int current = Rooms.CurrentEditType;
+    <ul class="list-group list-group-horizontal">
+        <button type="submit" name="selectEditBtn" value = "1" >
+            @if(current == 1){
+                <li class="list-group-item list-group-item-action active">Teachers</li>
+            }else{
+                <li class="list-group-item list-group-item-action">Teachers</li>
+            }
+        </button>
+        <button type="submit" name="selectEditBtn" value = "2" >
+            @if(current == 2){
+                <li class="list-group-item list-group-item-action active">Classes</li>
+            }else{
+                <li class="list-group-item list-group-item-action">Classes</li>
+            }
+        <button type="submit" name="selectEditBtn" value = "3" >
+            @if(current == 3){
+                <li class="list-group-item list-group-item-action active">Rooms</li>
+            }else{
+                <li class="list-group-item list-group-item-action">Rooms</li>
+            }            
+        </button>
+        <button type="submit" name="selectEditBtn" value = "4" >
+            @if(current == 4){
+                <li class="list-group-item list-group-item-action active">Subjects</li>
+            }else{
+                <li class="list-group-item list-group-item-action">Subjects</li>
+            }  
+        </button>
+    </ul>
+}
+
+<div class = "edit-data">
+    <div class="list-group">
+        @{
+            List<string> DataToShow = new List<string>();
+            switch(Rooms.CurrentEditType){
+                case 1:
+                    DataToShow = Teachers.GetTeachersList();
+                    break;
+                case 2:
+                    DataToShow = Classes.GetClassesList();
+                    break;
+                case 3:
+                    DataToShow = Rooms.GetRoomsList();
+                    break;
+                case 4:
+                    DataToShow = Courses.GetCoursesList();
+                    break;                                                          
+            }
+
+            int i=0;
+
+            @foreach(string singleEntry in DataToShow)
+            {
+                <ul class="list-group list-group-horizontal">
+                    <li class="list-group-item" id="left" >@singleEntry</li>
+                    @using (Html.BeginForm("RemoveEntity", "Edit"))
+                    {
+                        if(Rooms.GetRoomsList().Count() == 1 && Rooms.CurrentEditType == 3){ //at least 1 room required
+                            <li class="list-group-item">
+                                <button type="submit" class="btn btn-danger" value=@i name="valueToDelete" disabled>Remove</button>
+                            </li>
+                        }else{
+                            <li class="list-group-item">
+                                <button type="submit" class="btn btn-danger" value=@i name="valueToDelete">Remove</button>
+                            </li>
+                        }                        
+                    }
+                </ul>
+                i++;
+            }
+       }  
+    </div>
+
+    <div class="form-group"><br/><br/><br/>
+    <li class="list-group-item list-group-item-info">Add new entry. Duplicates not allowed! </li>
+    @using (Html.BeginForm("AddEntity", "Edit"))
+    {
+        <input type="txt" class="form-control" id="usr" name="value">
+        <button type="submit" class="btn btn-secondary" name="clickBtn">Add</button>
+    }
+    </div>
+
+</div>
+

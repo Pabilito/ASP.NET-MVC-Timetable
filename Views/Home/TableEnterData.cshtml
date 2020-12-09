@@ -1,0 +1,140 @@
+@{
+    //HEAD 
+    ViewData["Title"] = "Edit timetable entry";
+}
+
+@*Single entry override*@
+
+@{
+  List<string> hours = new List<string>(){"8:00 - 8:45", "8:55 - 9:40", "9:50 - 10:35", "10:55 - 11:40", "11:50 - 12:35", "12:45 - 13:30",
+    "13:40 - 14:25", "14:35 - 15:20", "15:30 - 16:15"};
+}
+
+<div>
+    <ul class="list-group">
+        <li class="list-group-item list-group-item-dark">
+            Room: @Lab2.Models.Rooms.GetCurrentRoom()
+        </li>
+        <li class="list-group-item list-group-item-dark">
+            @{
+                int slot = Lab2.Models.TableEntries.CurrentEntrySelected;
+                switch(slot%5){
+                    case 0:
+                        <text>Monday: </text>
+                        break;
+                    case 1:
+                        <text>Tuesday: </text>
+                        break;
+                    case 2:
+                        <text>Wednesday: </text>
+                     break;
+                    case 3:
+                        <text>Thursday: </text>
+                        break;
+                    case 4:
+                        <text>Friday: </text>
+                        break;
+                }
+                <text>@hours[(slot-slot%5)/5]</text>               
+            }
+        </li>
+    </ul>
+
+    <ul class="list-group list-group-horizontal">
+        <li class="list-group-item">
+            <ul class="list-group"> 
+                <li class="list-group-item list-group-item-warning">
+                    <p><b>Select class</b></p>
+                </li>
+    @{int i = 0;}           
+        @foreach(string item2 in Lab2.Models.Classes.GetClassesList())
+          {
+            @using (Html.BeginForm("SelectClass", "Rooms")){
+                @if(Lab2.Models.TableEntries.CurrentClassSelected == -1){
+                    <li class="list-group-item list-group-item-danger"><button type="submit" class="list-group-item" value=@i name="ClassSelected">@item2</button></li>
+                }else if(Lab2.Models.TableEntries.CurrentClassSelected == i){
+                    <li class="list-group-item list-group-item-success"><button type="submit" class="list-group-item active" value=@i name="ClassSelected">@item2</button></li>
+                }else{
+                    <li class="list-group-item list-group-item-success"><button type="submit" class="list-group-item" value=@i name="ClassSelected">@item2</button></li>
+                }
+            }
+            i++;
+          } 
+            </ul>
+        </li>
+    <li class="list-group-item">   
+        <ul class="list-group"> 
+                <li class="list-group-item list-group-item-warning">      
+                    <p><b>Select teacher</b></p>
+                </li>
+        @{i = 0;}     
+        @foreach(string item3 in Lab2.Models.Teachers.GetTeachersList())
+          {
+            @using (Html.BeginForm("SelectTeacher", "Rooms")){
+                @if(Lab2.Models.TableEntries.CurrentTeacherSelected == -1){
+                    <li class="list-group-item list-group-item-danger"><button class="list-group-item" type="submit" value =@i name ="TeacherSelected">@item3</button></li>
+                }else if(Lab2.Models.TableEntries.CurrentTeacherSelected == i){
+                    <li class="list-group-item list-group-item-success"><button class="list-group-item active" type="submit" value =@i name ="TeacherSelected">@item3</button></li>
+                }else{
+                    <li class="list-group-item list-group-item-success"><button class="list-group-item" type="submit" value =@i name ="TeacherSelected">@item3</button></li>
+                }
+            }
+            i++;
+          }                               
+            </li>
+        </ul>
+    <li class="list-group-item"> 
+        <ul class="list-group">  
+            <li class="list-group-item list-group-item-warning"> 
+                <p><b>Select subject</b></p>
+            </li>
+        @{i = 0;}   
+        @foreach(string item in Lab2.Models.Courses.GetCoursesList())
+          {
+            @using (Html.BeginForm("SelectCourse", "Rooms")){
+                @if(Lab2.Models.TableEntries.CurrentCourseSelected == -1){
+                    <li class="list-group-item list-group-item-danger"><button class="list-group-item" type="submit" value =@i name ="CourseSelected">@item</button></li>
+                }else if(Lab2.Models.TableEntries.CurrentCourseSelected == i){
+                    <li class="list-group-item list-group-item-success"><button class="list-group-item active" type="submit" value =@i name ="CourseSelected">@item</button></li>
+                }
+                else{
+                    <li class="list-group-item list-group-item-success"><button class="list-group-item" type="submit" value =@i name ="CourseSelected">@item</button></li>
+                }
+            }
+            i++;
+          } 
+            </li>
+        </ul>                                 
+    </ul>
+</div>
+
+
+  <div>
+      <ul class="list-group list-group-horizontal">
+        @{
+            if(Lab2.Models.TableEntries.GetCurrent().classs!="+")
+            {
+                <a asp-area="" asp-controller="Rooms" asp-action="Remove" type="button" class="btn btn-dark" id="confirmation">                        
+                    Remove
+                </a>
+            }else{
+                <button type="button" class="btn btn-light" id="confirmation" disabled>Removal disabled for empty entries</button>
+            }
+
+        }
+        <a asp-area="" asp-controller="Rooms" asp-action="Cancel" type="button" class="btn btn-danger" id="confirmation">                        
+            Cancel
+        </a>
+        @{
+            if(Lab2.Models.TableEntries.CurrentCourseSelected != -1 && 
+            Lab2.Models.TableEntries.CurrentClassSelected != -1 &&
+            Lab2.Models.TableEntries.CurrentTeacherSelected != -1){
+                <a asp-area="" asp-controller="Rooms" asp-action="Save" type="button" class="btn btn-success" id="confirmation">                        
+                    Save
+                </a>
+            }else{
+                <button type="button" class="btn btn-light" id="confirmation" disabled>Select data before saving</button>
+            }
+        }
+      </ul>
+  </div>
